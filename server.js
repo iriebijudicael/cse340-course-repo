@@ -29,6 +29,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 /**
  * Routes
  */
+// I add this with your other routes in server.js
+app.get('/categories', async (req, res) => {
+    const title = 'Service Project Categories';
+    res.render('categories', { title });
+});
+
 app.get('/', async (req, res) => {
     const title = 'Home';
     res.render('home', { title });
