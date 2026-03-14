@@ -2,14 +2,19 @@
 
 <%- include('partials/header') %>
 
-    <main>
-        <h1><%= title %></h1>
-        <h2>Upcoming Service Projects</h2>
-        <ul>
-           <li>Park Cleanup - Join us to clean up local parks and make them beautiful!</li>
-           <li>Food Drive - Help collect and distribute food to those in need.</li>
-           <li>Community Tutoring - Volunteer to tutor students in various subjects.</li>
+<main>
+    <h1><%= title %></h1>
+    <ul>
+        <% projects.forEach(project => { %>
+            <li>
+                <strong><%= new Date(project.project_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></strong>: 
+                <%= project.title %> 
+                <em>(<%= project.organization_name %>)</em>
+                <p><%= project.description %></p>
+                <p><small>Location: <%= project.location %></small></p>
+            </li>
+            <% }) %>
         </ul>
-    </main>
+</main>
 
 <%- include('partials/footer') %>
