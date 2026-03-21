@@ -1,4 +1,5 @@
-import pool from './db.js';
+
+import db from './db.js';
 
 /**
  * Fetches all projects joined with organization names
@@ -12,7 +13,7 @@ const getAllProjects = async () => {
             JOIN public.organization o ON p.organization_id = o.organization_id
             ORDER BY p.project_date ASC`;
         
-        const result = await pool.query(sql);
+        const result = await db.query(sql);
         return result.rows;
     } catch (error) {
         console.error("Error in getAllProjects model:", error);
@@ -53,7 +54,7 @@ const getUpcomingProjects = async (number_of_projects) => {
         WHERE p.project_date >= CURRENT_DATE
         ORDER BY p.project_date ASC
         LIMIT $1`;
-    const result = await pool.query(sql, [number_of_projects]);
+    const result = await db.query(sql, [number_of_projects]);
     return result.rows;
 };
 
@@ -67,7 +68,7 @@ const getProjectDetails = async (id) => {
         FROM public.service_project p
         JOIN public.organization o ON p.organization_id = o.organization_id
         WHERE p.project_id = $1`;
-    const result = await pool.query(sql, [id]);
+    const result = await db.query(sql, [id]);
     return result.rows[0]; // Return only the single object
 };
 
