@@ -81,7 +81,14 @@ VALUES ('Environment'), ('Education'), ('Human Services');
 -- Associate projects with categories (Example: Project 1 is Environment)
 -- Assuming project_id 1-15 exist from your previous task
 INSERT INTO public.project_category (project_id, category_id)
-VALUES (1, 1), (2, 1), (3, 1), (6, 3), (11, 2); 
--- (Add at least 15 entries here to cover all your projects)
+VALUES 
+-- Projects for Org 1 (Environment & Outreach)
+(1, 1), (1, 5), (2, 5), (3, 1), (4, 1), (5, 1),
+
+-- Projects for Org 2 (Food Security & Outreach)
+(6, 3), (6, 5), (7, 3), (8, 5), (9, 3), (10, 3), (10, 2),
+
+-- Projects for Org 3 (Education & Youth)
+(11, 2), (12, 2), (13, 2), (13, 4), (14, 2), (15, 2), (15, 4);
 
  
