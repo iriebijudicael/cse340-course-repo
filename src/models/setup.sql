@@ -59,3 +59,29 @@ VALUES
 (3, 'Youth Mentorship Kickoff', 'Introductory meeting for mentors.', 'Youth Center', '2026-06-05'),
 (3, 'Summer Reading Sign-up', 'Helping kids register for the program.', 'Education Hub', '2026-06-08'),
 (3, 'Backpack Stuffing', 'Filling bags with school supplies.', 'Youth Center', '2026-06-15');
+
+
+-- Create the category table
+CREATE TABLE IF NOT EXISTS public.category (
+    category_id SERIAL PRIMARY KEY,
+    category_name VARCHAR(50) NOT NULL
+);
+
+-- Create the join table (The "Glue")
+CREATE TABLE IF NOT EXISTS public.project_category (
+    project_id INT REFERENCES public.service_project(project_id) ON DELETE CASCADE,
+    category_id INT REFERENCES public.category(category_id) ON DELETE CASCADE,
+    PRIMARY KEY (project_id, category_id) -- Ensures a project isn't tagged with the same category twice
+);
+
+-- Insert 3 Categories
+INSERT INTO public.category (category_name) 
+VALUES ('Environment'), ('Education'), ('Human Services');
+
+-- Associate projects with categories (Example: Project 1 is Environment)
+-- Assuming project_id 1-15 exist from your previous task
+INSERT INTO public.project_category (project_id, category_id)
+VALUES (1, 1), (2, 1), (3, 1), (6, 3), (11, 2); 
+-- (Add at least 15 entries here to cover all your projects)
+
+ 

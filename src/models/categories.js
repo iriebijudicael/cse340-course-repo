@@ -36,12 +36,19 @@ const getCategoriesByProject = async (projectId) => {
 // 3. Get all projects associated with a specific category
 const getProjectsByCategory = async (categoryId) => {
     const sql = `
-        SELECT p.*, o.name AS organization_name 
-        FROM public.service_project p
-        JOIN public.project_category pc ON p.project_id = pc.project_id
+        SELECT 
+            p.project_id, 
+            p.title, 
+            p.project_date, 
+            o.organization_id,
+            o.name AS organization_name
+        FROM public.category c
+        JOIN public.project_category pc ON c.category_id = pc.category_id
+        JOIN public.service_project p ON pc.project_id = p.project_id
         JOIN public.organization o ON p.organization_id = o.organization_id
-        WHERE pc.category_id = $1
+        WHERE c.category_id = $1
         ORDER BY p.project_date ASC`;
+
     const result = await pool.query(sql, [categoryId]);
     return result.rows;
 };

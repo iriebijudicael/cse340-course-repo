@@ -62,13 +62,20 @@ const getUpcomingProjects = async (number_of_projects) => {
  */
 const getProjectDetails = async (id) => {
     const sql = `
-        SELECT p.project_id, p.title, p.description, p.project_date, p.location, 
-               p.organization_id, o.name AS organization_name
+        SELECT 
+            p.project_id, 
+            p.title, 
+            p.description, 
+            p.project_date AS date, 
+            p.location, 
+            p.organization_id, 
+            o.name AS organization_name
         FROM public.service_project p
         JOIN public.organization o ON p.organization_id = o.organization_id
         WHERE p.project_id = $1`;
+    
     const result = await pool.query(sql, [id]);
-    return result.rows[0]; // Return only the single object
+    return result.rows[0]; // Returns the single project object
 };
 
 // Export the model functions
