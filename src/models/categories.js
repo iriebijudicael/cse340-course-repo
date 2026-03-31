@@ -1,4 +1,4 @@
-import pool from './db.js';
+import db from './db.js';
 
 /**
  * Fetches all categories for the category list page
@@ -6,7 +6,7 @@ import pool from './db.js';
 const getAllCategories = async () => {
     try {
         const sql = "SELECT * FROM public.category ORDER BY category_name ASC";
-        const result = await pool.query(sql);
+        const result = await db.query(sql);
         return result.rows;
     } catch (error) {
         console.error("Error in getAllCategories:", error);
@@ -18,7 +18,7 @@ const getAllCategories = async () => {
 // 1. Get a single category by ID
 const getCategoryDetails = async (id) => {
     const sql = `SELECT * FROM public.category WHERE category_id = $1`;
-    const result = await pool.query(sql, [id]);
+    const result = await db.query(sql, [id]);
     return result.rows[0];
 };
 
@@ -29,27 +29,20 @@ const getCategoriesByProject = async (projectId) => {
         JOIN public.project_category pc ON c.category_id = pc.category_id
         WHERE pc.project_id = $1
         ORDER BY c.category_name ASC`;
-    const result = await pool.query(sql, [projectId]);
+    const result = await db.query(sql, [projectId]);
     return result.rows;
 };
 
 // 3. Get all projects associated with a specific category
 const getProjectsByCategory = async (categoryId) => {
     const sql = `
-        SELECT 
-            p.project_id, 
-            p.title, 
-            p.project_date, 
-            o.organization_id,
-            o.name AS organization_name
-        FROM public.category c
-        JOIN public.project_category pc ON c.category_id = pc.category_id
-        JOIN public.service_project p ON pc.project_id = p.project_id
+        SELECT p.project_id, p.title, p.project_date, o.name AS organization_name
+        FROM public.service_project p
+        JOIN public.project_category pc ON p.project_id = pc.project_id
         JOIN public.organization o ON p.organization_id = o.organization_id
-        WHERE c.category_id = $1
+        WHERE pc.category_id = $1
         ORDER BY p.project_date ASC`;
-
-    const result = await pool.query(sql, [categoryId]);
+    const result = await db.query(sql, [categoryId]);
     return result.rows;
 };
 

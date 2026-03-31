@@ -1,0 +1,56 @@
+<%- include('partials/header') %>
+
+<main class="project-details-container">
+    <header class="project-header">
+        <h1><%= project.title %></h1>
+        <p class="organization-attribution">
+            A service project by 
+            <a href="/organization/<%= project.organization_id %>" class="org-link">
+                <%= project.organization_name %>
+            </a>
+        </p>
+    </header>
+
+    <section class="project-info">
+        <div class="info-grid">
+            <div class="info-item">
+                <strong>Date:</strong> 
+                <span><%= project.date %></span>
+            </div>
+            <div class="info-item">
+                <strong>Location:</strong> 
+                <span><%= project.location %></span>
+            </div>
+        </div>
+
+        <div class="category-tags">
+            <strong>Categories:</strong>
+            <div class="tag-list">
+                <% if (categories && categories.length > 0) { %>
+                    <% categories.forEach(category => { %>
+                        <a href="/category/<%= category.category_id %>" class="tag-pill">
+                            <%= category.category_name %>
+                        </a>
+                    <% }); %>
+                <% } else { %>
+                    <span class="no-tags">No categories assigned.</span>
+                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <hr>
+
+    <section class="project-description">
+        <h2>Project Description</h2>
+        <div class="content">
+            <%= project.description %>
+        </div>
+    </section>
+
+    <footer class="project-footer">
+        <p><a href="/projects" class="back-link">← Back to Upcoming Projects</a></p>
+    </footer>
+</main>
+
+<%- include('partials/footer') %>

@@ -1,10 +1,12 @@
 import express from 'express';
+import session from 'express-session';
+import flash from './src/middleware/flash.js';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import { testConnection } from './src/models/db.js';
 import router from './src/controllers/routes.js';
 
-// Define the the application environment
+// Define the application environment
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
 
 // Define the port number the server will listen on
@@ -15,44 +17,61 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+
 /**
   * Configure Express middleware
   */
 
-// Serve static files from the public directory
+// 1. Serve static files first
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Set EJS as the templating engine
+// 2. Set EJS as the templating engine
 app.set('view engine', 'ejs');
 
 // Tell Express where to find your templates
 app.set('views', path.join(__dirname, 'src/views'));
 
-// Middleware to log all incoming requests
+// 3. FIX: Body Parser Middleware MUST come before routes
+// This allows your controllers to access req.body
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// Set up session management
+app.use(session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60 * 60 * 1000 } // Session expires after 1 hour of inactivity
+}));
+
+// Use flash message middleware
+app.use(flash);
+
+// 4. Middleware to log all incoming requests
 app.use((req, res, next) => {
     if (NODE_ENV === 'development') {
         console.log(`${req.method} ${req.url}`);
     }
-    next(); // Pass control to the next middleware or route
+    next();
 });
 
-// Middleware to make NODE_ENV available to all templates
+// 5. Middleware to make NODE_ENV available to all templates
 app.use((req, res, next) => {
     res.locals.NODE_ENV = NODE_ENV;
     next();
 });
 
-// Use the imported router to handle routes
+// 6. Use the imported router (Now it can safely access parsed body data)
 app.use(router);
 
-// Catch-all route for 404 errors
+// 7. Catch-all route for 404 errors (No route matched)
 app.use((req, res, next) => {
     const err = new Error('Page Not Found');
     err.status = 404;
     next(err);
 });
 
-// Global error handler
+// 8. Global error handler
 app.use((err, req, res, next) => {
     // Log error details for debugging
     console.error('Error occurred:', err.message);

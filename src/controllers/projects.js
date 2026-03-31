@@ -12,15 +12,17 @@ const showProjectsPage = async (req, res) => {
     res.render('projects', { title, projects });
 };
 
-// New function for details page
 const showProjectDetailsPage = async (req, res, next) => {
     const id = req.params.id;
     const project = await getProjectDetails(id);
-    const categories = await getCategoriesByProject(id); // Fetch the tags
+    // NEW: Fetch tags for this project
+    const categories = await getCategoriesByProject(id); 
+
+    if (!project) return next();
 
     res.render('project', { 
         title: project.title, 
-        project,
+        project, 
         categories // Pass tags to the view
     });
 };
