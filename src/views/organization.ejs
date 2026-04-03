@@ -1,6 +1,6 @@
 <%- include('partials/header') %>
 <main>
-    <h2><%= title %></h2>
+    <h1><%= title %></h1>
 
     <h2><%= organizationDetails.name %></h2>
     <img src="/images/<%= organizationDetails.logo_filename %>" alt="<%= organizationDetails.name %> logo">
@@ -14,4 +14,7 @@
         <% }) %>
     </ul>
 </main>
+
+<p><a href="/edit-organization/<%= organizationDetails.organization_id %>">Edit Organization</a></p>
+
 <%- include('partials/footer') %>

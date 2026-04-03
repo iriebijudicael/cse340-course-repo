@@ -2,15 +2,15 @@
 
 <main>
     <h1><%= title %></h1>
-    <ul class="category-list">
-        <% categories.forEach(category => { %>
+    <ul>
+        <% categories.forEach(cat => { %>
             <li>
-                <a href="/category/<%= category.category_id %>">
-                   <%= category.category_name %>
-                </a>
+                <%= cat.category_name %> 
+                <a href="/edit-category/<%= cat.category_id %>">[Edit]</a>
             </li>
         <% }) %>
-   </ul>
+    </ul>
+    <a href="/new-category" class="btn">+ Add New Category</a>
 </main>
 
 <%- include('partials/footer') %>
