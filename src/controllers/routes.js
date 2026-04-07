@@ -24,6 +24,11 @@ import { showCategoriesPage,
     processAssignCategoriesForm, } from './categories.js';
 import { testErrorPage } from './errors.js';
 import * as catCont from '../controllers/categories.js';
+import { showUserRegistrationForm, 
+    processUserRegistrationForm, 
+    showLoginForm, 
+    processLoginForm, 
+    processLogout } from '../controllers/users.js';
 
 
 const router = express.Router();
@@ -74,6 +79,16 @@ router.post('/new-category', catCont.categoryValidation, catCont.processNewCateg
 // Edit
 router.get('/edit-category/:id', catCont.showEditCategoryForm);
 router.post('/edit-category/:id', catCont.categoryValidation, catCont.processEditCategoryForm);
+
+
+// User registration routes
+router.get('/register', showUserRegistrationForm);
+router.post('/register', processUserRegistrationForm);
+
+// User login routes
+router.get('/login', showLoginForm);
+router.post('/login', processLoginForm);
+router.get('/logout', processLogout);
 
 // error-handling routes
 router.get('/test-error', testErrorPage);
