@@ -1,4 +1,6 @@
-import db from './db.js'
+import bcrypt from 'bcrypt';
+import db from './db.js';
+
 
 const createUser = async (name, email, passwordHash) => {
     const default_role = 'user';
@@ -40,4 +42,23 @@ const findUserByEmail = async (email) => {
     return result.rows[0];
 };
 
-export { createUser };
+// Internal function to check password
+const verifyPassword = async (password, passwordHash) => {
+    return bcrypt.compare(password, passwordHash);
+};
+
+// THE FIX: Add 'export' before the function name
+const authenticateUser = async (email, password) => {
+    const user = await findUserByEmail(email);
+    if (!user) return null;
+
+    const isMatch = await verifyPassword(password, user.password_hash);
+    if (isMatch) {
+        const { password_hash, ...userWithoutHash } = user;
+        return userWithoutHash;
+    }
+    return null;
+};
+
+
+export { createUser, findUserByEmail, verifyPassword, authenticateUser };

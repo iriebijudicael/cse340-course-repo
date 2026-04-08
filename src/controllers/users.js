@@ -1,5 +1,8 @@
-import bcrypt from 'bcrypt';
+
 import { createUser } from '../models/users.js';
+import { authenticateUser } from '../models/users.js';
+
+
 
 const showUserRegistrationForm = (req, res) => {
     res.render('register', { title: 'Register' });
@@ -24,10 +27,6 @@ const processUserRegistrationForm = async (req, res) => {
         req.flash('error', 'An error occurred during registration. Please try again.');
         res.redirect('/register');
     }
-};
-
-const verifyPassword = async (password, passwordHash) => {
-    return bcrypt.compare(password, passwordHash);
 };
 
 const showLoginForm = (req, res) => {
@@ -80,7 +79,6 @@ const requireLogin = (req, res, next) => {
 
 export { showUserRegistrationForm, 
     processUserRegistrationForm, 
-    verifyPassword, 
     showLoginForm, 
     processLoginForm, 
     processLogout, 
