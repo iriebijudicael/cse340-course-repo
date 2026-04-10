@@ -28,6 +28,17 @@ const organizationValidation = [
 ];
 
 
+
+// Function to render the "Create New Organization" form
+const newOrganizationPage = async (req, res) => {
+    res.render('new-organization', {
+        title: 'Add New Organization',
+        errors: req.flash('error'), // For displaying validation errors
+        formData: {} // To keep the form filled if there's an error later
+    });
+};
+
+
 // Define any controller functions
 const showOrganizationsPage = async (req, res) => {
     const organizations = await getAllOrganizations();
@@ -112,6 +123,7 @@ const processEditOrganizationForm = async (req, res) => {
 
 // Export any controller functions
 export {
+    newOrganizationPage,
     showOrganizationsPage,
     showOrganizationDetailsPage,
     showNewOrganizationForm,
