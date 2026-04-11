@@ -94,6 +94,8 @@ router.get('/logout', processLogout);
 
 // Protected dashboard route
 router.get('/dashboard', requireLogin, showDashboard);
+// Add this to your router file
+router.get('/users', requireLogin, showDashboard);
 
 // error-handling routes
 router.get('/test-error', testErrorPage);

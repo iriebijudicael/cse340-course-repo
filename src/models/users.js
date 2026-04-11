@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import db from './db.js';
 
 
@@ -31,7 +31,7 @@ const findUserByEmail = async (email) => {
     FROM users u
     JOIN roles r ON u.role_id = r.role_id
     WHERE u.email = $1
-`;
+    `;
     const query_params = [email];
     
     const result = await db.query(query, query_params);

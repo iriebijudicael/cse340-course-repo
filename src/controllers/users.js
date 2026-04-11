@@ -1,6 +1,6 @@
+import bcrypt from 'bcryptjs';
+import { createUser, authenticateUser } from '../models/users.js';
 
-import { createUser } from '../models/users.js';
-import { authenticateUser } from '../models/users.js';
 
 
 

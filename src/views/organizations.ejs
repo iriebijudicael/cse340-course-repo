@@ -10,11 +10,10 @@
         <% }); %>
     </ul>
     
-</main>
 
-<% if (user && user.role_name === 'admin') { %>
+    <% if (user && user.role_name === 'admin') { %>
     <a href="/new-organization">Add New Organization</a>
-<% } %>
-
+    <% } %>
+</main>
 
 <%- include('partials/footer') %>
