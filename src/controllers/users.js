@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { createUser, authenticateUser } from '../models/users.js';
+import { createUser, authenticateUser, getAllUsers } from '../models/users.js';
 
 
 
@@ -12,21 +12,21 @@ const processUserRegistrationForm = async (req, res) => {
     const { name, email, password } = req.body;
 
     try {
-        // Hash the password before storing it
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(password, salt);
-
-        // Create the user in the database
         const userId = await createUser(name, email, passwordHash);
 
-        // Redirect to the home page after successful registration
         req.flash('success', 'Registration successful! Please log in.');
-        res.redirect('/');
+        res.redirect('/login');
     } catch (error) {
-        console.error('Error registering user:', error);
-        req.flash('error', 'An error occurred during registration. Please try again.');
-        res.redirect('/register');
+        // Check if the error is a duplicate email (Postgres code 23505)
+    if (error.code === '23505') {
+        req.flash('error', 'That email is already registered. Please log in.');
+    } else {
+        req.flash('error', 'An error occurred. Please try again.');
     }
+    res.redirect('/register');
+}
 };
 
 const showLoginForm = (req, res) => {
@@ -113,6 +113,21 @@ const showDashboard = (req, res) => {
 };
 
 
+const showAllUsers = async (req, res) => {
+    try {
+        const users = await getAllUsers();
+        res.render('users/index', { 
+            title: 'User Management', 
+            users: users 
+        });
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        req.flash('error', 'Could not load user list.');
+        res.redirect('/dashboard');
+    }
+};
+
+// Update your export list at the bottom
 export { showUserRegistrationForm, 
     processUserRegistrationForm, 
     showLoginForm, 
@@ -120,4 +135,5 @@ export { showUserRegistrationForm,
     processLogout, 
     requireLogin, 
     requireRole,
-    showDashboard };
+    showDashboard,
+    showAllUsers };

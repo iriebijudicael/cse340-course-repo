@@ -3,9 +3,16 @@
 <main>
     <h1><%= title %></h1>
 
-    <h2>Dashboard</h2>
+    <h2>Welcome, <%= name %>!</h2>
     <p>Name: <%= name %></p>
     <p>Username: <%= email %></p>
+
+    <% if (user && user.role_name === 'admin') { %>
+    <div class="admin-panel">
+        <h3>Administrative Actions</h3>
+        <a href="/users" class="btn">Manage Users</a>
+    </div>
+<% } %>
 
 </main>
 
