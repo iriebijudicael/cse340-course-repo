@@ -6,7 +6,7 @@ import { showProjectsPage,
     processNewProjectForm, 
     projectValidation, 
     showEditProjectForm, 
-    processEditProjectForm  
+    processEditProjectForm, handleVolunteer, handleUnvolunteer  
 } from './projects.js';
 import {
     showOrganizationsPage,
@@ -94,10 +94,11 @@ router.get('/logout', processLogout);
 
 // Protected dashboard route
 router.get('/dashboard', requireLogin, showDashboard);
-// Add this to your router file
-// router.get('/users', requireLogin, showDashboard);
 // Protect this route so ONLY admins can see the user list
 router.get('/users', requireRole('admin'), showAllUsers);
+
+router.post('/project/volunteer/:id', requireLogin, handleVolunteer);
+router.post('/project/unvolunteer/:id', requireLogin, handleUnvolunteer);
 
 // error-handling routes
 router.get('/test-error', testErrorPage);

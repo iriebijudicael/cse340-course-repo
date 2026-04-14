@@ -1,0 +1,19 @@
+<%- include('partials/header') %>
+<main>
+    <% if (locals.user) { %>
+    <div class="volunteer-section">
+        <% if (isVolunteering) { %>
+            <p>✅ You are volunteering for this project.</p>
+            <form action="/project/unvolunteer/<%= project.project_id %>" method="POST">
+                <button type="submit" class="btn-link">Remove myself</button>
+            </form>
+        <% } else { %>
+            <form action="/project/volunteer/<%= project.project_id %>" method="POST">
+                <button type="submit" class="btn-volunteer">Volunteer for this Project</button>
+            </form>
+        <% } %>
+    </div>
+    <% } %>
+</main>
+
+<%- include('partials/footer') %>

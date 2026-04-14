@@ -3,15 +3,32 @@
 <main>
     <h1><%= title %></h1>
 
-    <h2>Welcome, <%= name %>!</h2>
-    <p>Name: <%= name %></p>
-    <p>Username: <%= email %></p>
+    <h2>Welcome, <%= user.name %>!</h2>
+    <p>Name: <%= user.name %></p>
+    <p>Username: <%= user.email %></p>
+
 
     <% if (user && user.role_name === 'admin') { %>
     <div class="admin-panel">
         <h3>Administrative Actions</h3>
         <a href="/users" class="btn">Manage Users</a>
     </div>
+    <% } %>
+
+    <h3>Your Volunteer Projects</h3>
+    <% if (volunteeredProjects.length > 0) { %>
+        <ul>
+            <% volunteeredProjects.forEach(project => { %>
+                <li>
+                    <%= project.project_name %> 
+                    <form action="/project/unvolunteer/<%= project.project_id %>" method="POST" style="display:inline;">
+                       <button type="submit">Remove</button>
+                    </form>
+                </li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+    <p>You haven't signed up for any projects yet.</p>
 <% } %>
 
 </main>

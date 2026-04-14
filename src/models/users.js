@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import db from './db.js';
 
 
@@ -24,13 +24,13 @@ const createUser = async (name, email, passwordHash) => {
     return result.rows[0].user_id;
 };
 
-
+// Internal function to find user by email
 const findUserByEmail = async (email) => {
     const query = `
-    SELECT u.user_id, u.email, u.password_hash, r.role_name 
-    FROM users u
-    JOIN roles r ON u.role_id = r.role_id
-    WHERE u.email = $1
+       SELECT u.user_id, u.email, u.password_hash, r.role_name 
+       FROM users u
+       JOIN roles r ON u.role_id = r.role_id
+       WHERE u.email = $1
     `;
     const query_params = [email];
     

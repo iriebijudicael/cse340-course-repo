@@ -104,6 +104,29 @@ const processEditProjectForm = async (req, res) => {
     res.redirect(`/project/${projectId}`);
 };
 
+
+const handleVolunteer = async (req, res) => {
+    const projectId = req.params.id;
+    const userId = req.session.user.user_id;
+
+    try {
+        await addVolunteer(userId, projectId);
+        req.flash('success', 'You have signed up to volunteer!');
+        res.redirect(`/project/${projectId}`);
+    } catch (error) {
+        res.redirect(`/project/${projectId}`);
+    }
+};
+
+const handleUnvolunteer = async (req, res) => {
+    const projectId = req.params.id;
+    const userId = req.session.user.user_id;
+    
+    await removeVolunteer(userId, projectId);
+    req.flash('success', 'You are no longer volunteering for this project.');
+    res.redirect(req.get('Referrer') || '/dashboard'); // Returns user to where they came from
+};
+
 // Export any controller functions
 export { showProjectsPage, 
     showProjectDetailsPage, 
@@ -111,4 +134,4 @@ export { showProjectsPage,
     processNewProjectForm,
     showEditProjectForm,
     processEditProjectForm, 
-    projectValidation };
+    projectValidation, handleVolunteer, handleUnvolunteer };

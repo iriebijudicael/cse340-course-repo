@@ -1,6 +1,7 @@
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import { createUser, authenticateUser, getAllUsers } from '../models/users.js';
-
+// src/controllers/users.js
+import { getVolunteeredProjects } from '../models/projects.js';
 
 
 
@@ -103,14 +104,14 @@ const requireRole = (role) => {
 };
 
 
-const showDashboard = (req, res) => {
-    const user = req.session.user;
-    res.render('dashboard', { 
-        title: 'Dashboard',
-        name: user.name,
-        email: user.email
-    });
-};
+// const showDashboard = (req, res) => {
+//     const user = req.session.user;
+//     res.render('dashboard', { 
+//         title: 'Dashboard',
+//         name: user.name,
+//         email: user.email
+//     });
+// };
 
 
 const showAllUsers = async (req, res) => {
@@ -124,6 +125,31 @@ const showAllUsers = async (req, res) => {
         console.error('Error fetching users:', error);
         req.flash('error', 'Could not load user list.');
         res.redirect('/dashboard');
+    }
+};
+
+
+
+const showDashboard = async (req, res) => {
+    try {
+        const userId = req.session.user.user_id;
+
+        // 1. Fetch the data from the database
+        const volunteeredProjects = await getVolunteeredProjects(userId);
+
+        // 2. Pass it to the view
+        res.render('dashboard', {
+            title: 'Dashboard',
+            volunteeredProjects: volunteeredProjects, // This fixes the error!
+            user: req.session.user
+        });
+    } catch (error) {
+        console.error("Dashboard error:", error);
+        res.render('dashboard', {
+            title: 'Dashboard',
+            volunteeredProjects: [], // Send empty array so it doesn't crash on error
+            user: req.session.user
+        });
     }
 };
 

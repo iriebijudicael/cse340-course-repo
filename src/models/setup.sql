@@ -134,7 +134,18 @@ SELECT * FROM users;
 SELECT * FROM roles;
 
 -- Update a specific user to have admin role
-UPDATE users SET role_id = (SELECT role_id FROM roles WHERE role_name = 'admin') WHERE email = 'iriejudicaelelvis225@gmail.com';
+UPDATE users SET role_id = (SELECT role_id FROM roles WHERE role_name = 'admin') WHERE email = 'info@byupathway.edu';
 
 -- Verify the update by listing all users and their roles
 SELECT users.user_id, users.email, roles.role_name FROM users JOIN roles ON users.role_id = roles.role_id;
+
+
+
+
+CREATE TABLE IF NOT EXISTS public.project_volunteers (
+    volunteer_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES public.users(user_id) ON DELETE CASCADE,
+    project_id INT REFERENCES public.service_project(project_id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, project_id) -- Prevents volunteering for the same project twice
+);

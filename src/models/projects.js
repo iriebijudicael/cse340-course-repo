@@ -111,10 +111,42 @@ const updateProject = async (projectId, title, description, location, date, orga
     return await db.query(sql, params);
 };
 
+
+// Add a volunteer
+const addVolunteer = async (userId, projectId) => {
+    const sql = "INSERT INTO project_volunteers (user_id, project_id) VALUES ($1, $2) RETURNING *";
+    const result = await db.query(sql, [userId, projectId]);
+    return result.rows[0];
+};
+
+// Remove a volunteer
+const removeVolunteer = async (userId, projectId) => {
+    const sql = "DELETE FROM project_volunteers WHERE user_id = $1 AND project_id = $2";
+    return await db.query(sql, [userId, projectId]);
+};
+
+// Get projects for a specific user
+const getVolunteeredProjects = async (userId) => {
+    const sql = `
+        SELECT sp.* FROM public.service_project sp
+        JOIN public.project_volunteers pv ON sp.project_id = pv.project_id
+        WHERE pv.user_id = $1
+        ORDER BY sp.project_date ASC`;
+    const result = await db.query(sql, [userId]);
+    return result.rows;
+};
+
+// Check if a specific user is already volunteering (for the toggle link)
+const isUserVolunteering = async (userId, projectId) => {
+    const sql = "SELECT * FROM project_volunteers WHERE user_id = $1 AND project_id = $2";
+    const result = await db.query(sql, [userId, projectId]);
+    return result.rowCount > 0;
+};
+
 // Export the model functions
 export { getAllProjects, 
     getProjectsByOrganizationId, 
     getUpcomingProjects, 
     getProjectDetails, 
     createProject, 
-    updateProject };
+    updateProject, addVolunteer, removeVolunteer, getVolunteeredProjects, isUserVolunteering };
